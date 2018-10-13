@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace EventCatalogAPI.Data
 {
@@ -49,19 +51,25 @@ namespace EventCatalogAPI.Data
                 new CatalogType {Type="Food"}
             };
         }
-        //private static IEnumerable<CatalogDate> GetPreConfigureCatalogDates()
-        //{
 
-        //    for (var dt = start; dt <= end; dt = dt.AddDays(1))
-        //    {
-        //        dates.Add(dt);
-        //    }
-        //}
-        
-        
-            
-            
-        
+        private static IEnumerable<CatalogDate> GetPreConfigureCatalogDates()
+        {
+            List<CatalogDate> catalogdate = new List<CatalogDate>();
+
+            DateTime datetime = DateTime.Now;
+            for (int i = 0; i <= 10; i++)
+            {
+                DateTime newdatetime = datetime.AddDays(1);
+
+                catalogdate.Add(new CatalogDate { Date = newdatetime });
+            }
+
+            return catalogdate;
+        }
+
+
+
+
         private static IEnumerable<CatalogLocation> GetPreConfigureCatalogLocations()
         {
             return new List<CatalogLocation>()
