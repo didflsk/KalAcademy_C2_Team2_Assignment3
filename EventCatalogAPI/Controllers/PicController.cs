@@ -12,7 +12,7 @@ namespace EventCatalogAPI.Controllers
     public class PicController : Controller
     {
         ///private readonly IHostingEnviroment _ env;
-        ///    public PicController(IHostingEnvironment env)
+        ///public PicController(IHostingEnvironment env)
         /// {
         ///   _env = env;
         /// }
