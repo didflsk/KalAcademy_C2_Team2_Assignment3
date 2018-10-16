@@ -7,6 +7,7 @@ using EventCatalogAPI.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace EventCatalogAPI.Controllers
 {
@@ -15,12 +16,12 @@ namespace EventCatalogAPI.Controllers
     public class CatalogController : Controller
     {
         private readonly CatalogContext _catalogContext;
-        ///private readonly IConfiguration_configuration;
-
-        public CatalogController(CatalogContext catalogContext)
+        private readonly IConfiguration _configuration;
+        public CatalogController(CatalogContext catalogContext,
+            IConfiguration configuration)
         {
             _catalogContext = catalogContext;
-         ///_configuration = configuration;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -80,28 +81,32 @@ namespace EventCatalogAPI.Controllers
             {
                 return BadRequest();
             }
-            var catalogEvent = await _catalogContext.CatalogEvents
+
+            var catalogevent= await _catalogContext.CatalogEvents
                 .SingleOrDefaultAsync(c => c.Id == id);
 
-            if (catalogEvent != null)
+            if (catalogevent != null)
             {
-                catalogEvent.PictureUrl = catalogEvent.PictureUrl;
-                /// .Replace("http://externalcatalogbaseurltobereplaced"
-                ///_configuration["ExternalCatalogBaseUrl"]
-                ///);
-                return Ok(catalogEvent);
+                catalogevent.PictureUrl = catalogevent.PictureUrl
+                .Replace("http://externalcatalogbaseurltobereplaced",
+                _configuration["ExternalCatalogBaseUrl"]
+                );
+                return Ok(catalogevent);
             }
             return NotFound(); 
             }
-        }
+        
 
-        //private List<CatalogEvent> ChangeUrlPlaceholder(List<CatalogEvent> events)
-        //{
-        //    events.ForEach(
-        //        x => x.PictureUrl = x.PictureUrl
-        //        /// .Replace("http://externalcatalogbaseurltobereplaced"
-        //        ///_configuration["ExternalCatalogBaseUrl"]
-        //        );
-        //        return events;
-        //}
-            }
+        private List<CatalogEvent> ChangeUrlPlaceholder(
+            List<CatalogEvent> events)
+        {
+        events.ForEach(
+           x => x.PictureUrl = 
+            x.PictureUrl
+            .Replace("http://externalcatalogbaseurltobereplaced",
+            _configuration["ExternalCatalogBaseUrl"]
+            ));
+          return events;
+        }
+}
+}
